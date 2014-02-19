@@ -96,6 +96,23 @@ public class Gramatica {
 		}
 		return parteDireitaListaProducoes;
 	}
+	
+	// Dada uma variável, ele retorna uma lista com o lado direito delas
+	public List<String> getParteDireitaListaProducoes(String v) {
+		List<String> lista = new ArrayList<String>();
+		for (String prod: producoes){
+			if (v.equals(prod.charAt(0)+"")){
+				lista.add(prod);
+			}
+		}
+		List<String> parteDireitaListaProducoes = new ArrayList<String>();
+		String[] lado;
+		for (String prod: lista){
+			lado = prod.split("->");
+			parteDireitaListaProducoes.add(lado[1]);
+		}
+		return parteDireitaListaProducoes;
+	}
 
 	// Retorna a variável inicial da gramática
 	public String getVariavelInicial(){

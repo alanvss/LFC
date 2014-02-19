@@ -1,28 +1,22 @@
 package tratadores;
 
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import arquivo.LerArquivoTexto;
-
 public class Reconhecedor {
 
+	public static void main(String[] args) throws IOException {
 
-
-	public static void main(String[] args) {
-		String pathDoArquivo = "D:\\Meus Documentos\\workspace_lfc\\";
-		String nomeDoArquivo = "L2_automato_01.txt";
-		LerArquivoTexto leitor = new LerArquivoTexto(pathDoArquivo+nomeDoArquivo);
-
-		// Ler o arquivo passado como parâmetro e o coloca numa lista entrada.
-		List<String> entrada = new ArrayList<>();
-		entrada = leitor.lerLinhasArquivo();
+		// Faz as leituras das entradas e armazena os valores em uma lista.
+		List<String> entrada = lerEntradas();
 
 		// Extrai a gramática
 		Gramatica gramatica = new Gramatica(entrada.get(0)); 
-		gramatica.imprimir();
+		//gramatica.imprimir();
 
 		// Coloca as cadeias de teste em uma lista
 		List<String> cadeias = new ArrayList<>();
@@ -32,15 +26,17 @@ public class Reconhecedor {
 
 		// Cria os conjuntos Primeiro.
 		Primeiro primeiro = new Primeiro(gramatica);
-		primeiro.imprimir();
-		
+		//primeiro.imprimir();
+
 		// Cria os conjuntos Sequencia.
 		Sequencia sequencia = new Sequencia(primeiro, gramatica);
+		//sequencia.imprimir();
 
-		sequencia.imprimir();
-		
 		// Cria a tabelaM
 		Tabela tabelaM = new Tabela(sequencia, primeiro, gramatica);
+
+		// Lista com as respostas do processamento
+		ArrayList<Integer> respostas = new ArrayList<Integer>();
 
 
 		//Realizar os testes para cada cadeia
@@ -48,16 +44,11 @@ public class Reconhecedor {
 
 			// Adiciona o cifrão à cadeia;
 			cadeia = cadeia+"$";
-			
-			System.out.println(" - - - - - - - - - - - - - - - -");
-			System.out.println("Testando a cadeia: "+cadeia);
 
 			//Cria a pilha e inicializa
 			Stack<String> pilha = new Stack<String>();
 			pilha.add("$");
 			pilha.add(gramatica.getVariavelInicial());
-
-			//String pilhaInicial = pilha.toString();
 
 			int n = cadeia.length();
 
@@ -90,20 +81,74 @@ public class Reconhecedor {
 								pilha.add(celula.charAt(j)+"");	
 							}
 						}
-						
+
 					}
-				}
+				}   
 				if (simboloPilha.equals(simboloCadeia) && simboloPilha.equals("$")){
 					aceita = true;
 				}
-				
+   
 			}
+			
+			// Tratando o caso em que a entrada é vazia e se deve aceitar.
+			if (cadeia.equals(" $") && ((gramatica.getParteDireitaListaProducoes(gramatica.getVariavelInicial())).contains("E"))){
+				aceita = true;
+			}
+			
 			//Voltei aqui para o for da cadeia.
 			if (aceita){
-				System.out.println("1");
+				//System.out.println("1: "+cadeia);
+				respostas.add(1);
 			} else {
-				System.out.println("0");
+				//System.out.println("0: "+cadeia);
+				respostas.add(0);
 			}
+		}
+
+		// Limpa a tela e escreve as saídas.
+		escreverSaidas(respostas);
+	}
+
+	private static List<String> lerEntradas() throws IOException {
+		// Criando o leitor de entradas a partir do terminal
+		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+
+		// Lista que armazena os valores lidos no terminal
+		List<String> entrada = new ArrayList<String>();
+		String str;
+
+		// Adiciona cada valor na Lista "entrada", caso leia-se um "enter" para-se o processo de leitura
+		boolean continua = true;
+		while(continua){
+			str = input.readLine();
+			entrada.add(str);
+			if (str.equals("")){
+				continua = false;
+			}
+		}
+
+		// Eliminando a ultima posição, pois trata-se de um "enter"
+		entrada.remove(entrada.size()-1);
+		return entrada;
+	}
+	
+	private static void escreverSaidas(List<Integer> r) {
+		clearConsole();
+		for (Integer i : r){
+			System.out.println(""+i);
+		}
+	}
+
+	private static void clearConsole() {
+		try {
+			String os = System.getProperty("os.name");
+			if (os.contains("Windows")){
+				Runtime.getRuntime().exec("cls");
+			} else {
+				Runtime.getRuntime().exec("clear");
+			}
+		} catch (Exception exception) {
+			//System.out.println("Não consigo limpar a sua tela para escrever a saída.");
 		}
 	}
 }
