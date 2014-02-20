@@ -44,6 +44,11 @@ public class Reconhecedor {
 
 			// Adiciona o cifrão à cadeia;
 			cadeia = cadeia+"$";
+			
+			// Tratamento caso a cadeia seja vazia
+			if(cadeia.equals(" $")){
+				cadeia = "$";	
+			}
 
 			//Cria a pilha e inicializa
 			Stack<String> pilha = new Stack<String>();
@@ -90,10 +95,6 @@ public class Reconhecedor {
    
 			}
 			
-			// Tratando o caso em que a entrada é vazia e se deve aceitar.
-			if (cadeia.equals(" $") && ((gramatica.getParteDireitaListaProducoes(gramatica.getVariavelInicial())).contains("E"))){
-				aceita = true;
-			}
 			
 			//Voltei aqui para o for da cadeia.
 			if (aceita){
