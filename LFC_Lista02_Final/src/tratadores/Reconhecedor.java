@@ -48,7 +48,7 @@ public class Reconhecedor {
 			// Tratamento caso a cadeia seja vazia
 			if(cadeia.equals(" $")){
 				cadeia = "$";	
-			}
+			}  
 
 			//Cria a pilha e inicializa
 			Stack<String> pilha = new Stack<String>();
