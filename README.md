@@ -2,8 +2,8 @@ LFC</br></br>
 
 <br>O meu arquivo jar (T2alanvinicius.jar) encontra-se na pasta principal do projeto (LFC_Lista02_Final).</br>
 <br>Para executar digite no promtp:</br>
+<br></br>
 <br>   java -jar T2alanvinicius.jar</br>
-
 </br>
 </br>
 
